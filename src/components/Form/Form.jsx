@@ -1,21 +1,24 @@
 import { useState } from 'react';
-import { Button } from './Button';
+import { AUTHOR } from '../../constants';
 
-export const Form = () => {
-  const [count, setCount] = useState(0);
-  const [visible, setVisible] = useState(true);
-
+export const Form = ({ addMessage }) => {
+  const [value, setValue] = useState('');
+  const handleSubbmit = (ev) => {
+    ev.preventDefault();
+    addMessage({
+      author: AUTHOR.user,
+      value,
+    });
+    setValue('');
+  };
   return (
-    <>
-      <h3>Parent component</h3>
-      <p>{count}</p>
-      <button onClick={() => setCount(count + 1)}>+1</button>
-      <br />
-      <button onClick={() => setVisible(!visible)}>
-        {visible ? 'hide' : 'visible'}
-      </button>
-      <h3>Child component</h3>
-      {visible && <Button value={0} />}
-    </>
+    <form onSubmit={handleSubbmit}>
+      <input
+        type="text"
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+      />
+      <button disabled={!value}>send</button>
+    </form>
   );
 };

@@ -1,6 +1,32 @@
-// import { Form } from './components/FormClass/Form.jsx';
-import { Form } from './components/Form/Form.jsx';
+import { useEffect, useState } from 'react';
+import { Form } from './components/Form';
+import { AUTHOR } from './constants';
+import { MessageList } from './MessageList';
 
 export const App = () => {
-  return <Form />;
+  const [messages, setMessages] = useState([]);
+  const addMessage = (newMessage) => {
+    setMessages((prevMessages) => [...prevMessages, newMessage]);
+  };
+
+  useEffect(() => {
+    if (
+      messages.length > 0 &&
+      messages[messages.length - 1].author === AUTHOR.user
+    ) {
+      const timeout = setTimeout(() => {
+        addMessage({
+          author: AUTHOR.bot,
+          value: 'Im BOT',
+        });
+      }, 1000);
+      return () => clearTimeout(timeout);
+    }
+  }, [messages]);
+  return (
+    <>
+      <MessageList messages={messages} />
+      <Form addMessage={addMessage} />
+    </>
+  );
 };
